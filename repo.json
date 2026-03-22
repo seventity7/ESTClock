@@ -5,11 +5,14 @@
     {
       "Name": "EST Clock",
       "InternalName": "ESTClock",
-      "AssemblyVersion": "1.0.0.0",
-      "Description": "A customizable ingame real-time EST clock",
+      "AssemblyVersion": "0.0.1",
       "Author": "Bryer",
+      "Description": "A customizable ingame real-time EST clock",
+      "Punchline": "Real-time EST clock for your HUD",
       "RepoUrl": "https://github.com/seventity7/ESTClock",
-      "DownloadLinkInstall": "https://github.com/seventity7/ESTClock/releases/download/v0.0.1/ESTClock.dll"
+      "DownloadLinkInstall": "https://github.com/seventity7/ESTClock/releases/download/v0.0.1/ESTClock.dll",
+      "IsHide": false,
+      "Changelog": "Plugin released."
     }
   ]
 }
