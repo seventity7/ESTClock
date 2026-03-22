@@ -1,6 +1,6 @@
 {
   "Name": "ESTClock Repo",
-  "Url": "https://raw.githubusercontent.com/seventity7/ESTClock/main",
+  "Url": "https://raw.githubusercontent.com/seventity7/ESTClock/main/",
   "Plugins": [
     {
       "Name": "EST Clock",
