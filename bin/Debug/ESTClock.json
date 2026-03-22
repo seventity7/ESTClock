@@ -19,7 +19,7 @@
   "LoadSync": false,
   "CanUnloadAsync": false,
   "LoadPriority": 0,
-  "IconUrl": "https://i.imgur.com/P1GxPjz.png",
+  "IconUrl": "https://github.com/seventity7/ESTClock/blob/main/estclockicon.png",
   "Punchline": "Tired of missing stuff cause everything is in damn EST time but not your timezone? Say less.",
   "AcceptsFeedback": true
 }
