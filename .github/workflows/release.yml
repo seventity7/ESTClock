@@ -23,10 +23,11 @@ jobs:
 
       # 🔥 baixa Dalamud manual
       - name: Download Dalamud
+        shell: powershell
         run: |
           mkdir .dalamud
-          curl -L https://goatcorp.github.io/dalamud-distrib/latest.zip -o dalamud.zip
-          tar -xf dalamud.zip -C .dalamud
+          Invoke-WebRequest https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile dalamud.zip
+          Expand-Archive dalamud.zip -DestinationPath .dalamud
 
       - name: Restore
         run: dotnet restore --no-cache
@@ -46,3 +47,9 @@ jobs:
           files: ESTClock.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List Dalamud files
+        run: dir .dalamud
+
+      - name: Show files
+        run: dir .dalamud -Recurse

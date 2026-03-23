@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\Bryer\\AppData\\Roaming\\XIVLauncher\\devPlugins\\ESTClock\\ESTClock\\ESTClock.csproj": {
-      "version": "1.0.0",
+      "version": "0.0.0.1",
       "restore": {
         "projectUniqueName": "C:\\Users\\Bryer\\AppData\\Roaming\\XIVLauncher\\devPlugins\\ESTClock\\ESTClock\\ESTClock.csproj",
         "projectName": "ESTClock",
@@ -21,9 +21,7 @@
           "net8.0-windows"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://goatcorp.github.io/dalamud-distrib/nuget": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0-windows7.0": {
@@ -36,6 +34,9 @@
             "NU1605"
           ]
         },
+        "restoreLockProperties": {
+          "restorePackagesWithLockFile": "true"
+        },
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
@@ -46,6 +47,21 @@
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "DalamudPackager": {
+              "target": "Package",
+              "version": "[14.0.2, )"
+            },
+            "DotNet.ReproducibleBuilds": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.2.39, )"
+            },
+            "ImGui.NET": {
+              "target": "Package",
+              "version": "[1.90.0.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
