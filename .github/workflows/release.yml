@@ -23,6 +23,8 @@ jobs:
 
       - name: Build
         run: dotnet build --configuration Release
+        env:
+            CI: true
 
       - name: Find DLL
         id: find_dll
