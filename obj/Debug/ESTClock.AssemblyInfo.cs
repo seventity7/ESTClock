@@ -11,7 +11,7 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("ESTClock")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.0.1.13")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.0.1.13+1aa473f4bf0f40bc0cdb1fc50b14186badfcaba2")]
 [assembly: System.Reflection.AssemblyProductAttribute("ESTClock")]
