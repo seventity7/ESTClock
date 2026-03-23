@@ -33,7 +33,7 @@ jobs:
         run: dotnet restore --no-cache
 
       - name: Build
-        run: dotnet build -c Release --no-restore
+        run: dotnet build -c Release --no-restore -p:DalamudLibPath="D:\a\ESTClock\ESTClock\references\"
 
       - name: Publish
         run: dotnet publish -c Release -o publish --no-build
