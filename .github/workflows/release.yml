@@ -1,0 +1,46 @@
+name: Build and Release Plugin
+
+on:
+  push:
+    tags:
+      - "v*.*.*"   # dispara quando você cria tag tipo v0.0.2
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build (Release)
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Prepare output folder
+        run: |
+          mkdir release
+          mkdir release/ESTClock
+
+      - name: Copy files
+        run: |
+          copy ESTClock\bin\Release\*\ESTClock.dll release\ESTClock\
+          copy ESTClock.json release\ESTClock\
+
+      - name: Create ZIP
+        run: |
+          powershell Compress-Archive -Path release/ESTClock -DestinationPath ESTClock.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ESTClock.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
