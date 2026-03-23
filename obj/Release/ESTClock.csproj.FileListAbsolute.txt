@@ -1,4 +1,3 @@
-C:\Users\Bryer\AppData\Roaming\XIVLauncher\devPlugins\ESTClock\ESTClock\bin\Release\goat.png
 C:\Users\Bryer\AppData\Roaming\XIVLauncher\devPlugins\ESTClock\ESTClock\bin\Release\ESTClock.deps.json
 C:\Users\Bryer\AppData\Roaming\XIVLauncher\devPlugins\ESTClock\ESTClock\bin\Release\ESTClock.dll
 C:\Users\Bryer\AppData\Roaming\XIVLauncher\devPlugins\ESTClock\ESTClock\obj\Release\ESTClock.csproj.AssemblyReference.cache

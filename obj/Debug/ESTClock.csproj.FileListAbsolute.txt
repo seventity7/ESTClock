@@ -1,4 +1,3 @@
-C:\Users\Bryer\AppData\Roaming\XIVLauncher\devPlugins\ESTClock\ESTClock\bin\Debug\goat.png
 C:\Users\Bryer\AppData\Roaming\XIVLauncher\devPlugins\ESTClock\ESTClock\bin\Debug\ESTClock.deps.json
 C:\Users\Bryer\AppData\Roaming\XIVLauncher\devPlugins\ESTClock\ESTClock\bin\Debug\ESTClock.dll
 C:\Users\Bryer\AppData\Roaming\XIVLauncher\devPlugins\ESTClock\ESTClock\bin\Debug\ImGui.NET.dll

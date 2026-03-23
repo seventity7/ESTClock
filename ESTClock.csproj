@@ -16,10 +16,4 @@
     <PackageReference Include="ImGui.NET" Version="1.91.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\Data\goat.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Visible>false</Visible>
-    </Content>
-  </ItemGroup>
 </Project>
