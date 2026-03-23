@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using ImGuiNET; // Corrigido
+using ImGuiNET;
 using Dalamud.Interface.Windowing;
 
 namespace ESTClock.Windows;
@@ -10,7 +10,7 @@ public class MainWindow : Window, IDisposable
     private readonly Plugin plugin;
 
     public MainWindow(Plugin plugin) : base("EST CLOCK", 
-        ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration)
+        (Dalamud.Bindings.ImGui.ImGuiWindowFlags)(ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration))
     {
         this.plugin = plugin;
     }
@@ -30,6 +30,4 @@ public class MainWindow : Window, IDisposable
         ImGui.SetWindowFontScale(plugin.Configuration.ClockTextScale);
         ImGui.TextColored(plugin.Configuration.ClockTextColor, text);
     }
-
-    public void Toggle() => IsOpen = !IsOpen;
 }

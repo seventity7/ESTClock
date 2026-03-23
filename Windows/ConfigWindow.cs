@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using ImGuiNET; // Corrigido
+using ImGuiNET;
 using Dalamud.Interface.Windowing;
 
 namespace ESTClock.Windows;
@@ -13,7 +13,8 @@ public class ConfigWindow : Window, IDisposable
     {
         this.configuration = plugin.Configuration;
         Size = new Vector2(300, 250);
-        SizeCondition = ImGuiCond.Always;
+        // Cast explícito para o namespace que o Dalamud espera internamente
+        SizeCondition = (Dalamud.Bindings.ImGui.ImGuiCond)ImGuiCond.Always;
     }
 
     public void Dispose() { }
@@ -41,5 +42,4 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
     }
-
 }
