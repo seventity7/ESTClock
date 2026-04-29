@@ -4,7 +4,7 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 
-namespace ESTClock.Windows;
+namespace Clock.Windows;
 
 public class MainWindow : Window, IDisposable
 {
@@ -23,7 +23,7 @@ public class MainWindow : Window, IDisposable
     private const float PanelRoundingReduction = 1.5f;
 
     public MainWindow(Plugin plugin)
-        : base("###ESTClockMainWindow")
+        : base("###ClockMainWindow")
     {
         this.plugin = plugin;
 

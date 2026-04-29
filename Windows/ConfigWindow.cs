@@ -6,7 +6,7 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 
-namespace ESTClock.Windows;
+namespace Clock.Windows;
 
 public class ConfigWindow : Window, IDisposable
 {
@@ -16,7 +16,7 @@ public class ConfigWindow : Window, IDisposable
         Alarms
     }
 
-    private const string HelpUrl = "https://github.com/seventity7/ESTClock";
+    private const string HelpUrl = "https://github.com/seventity7/clock";
 
     private readonly Plugin plugin;
     private readonly Configuration configuration;
@@ -93,7 +93,7 @@ public class ConfigWindow : Window, IDisposable
         var windowSize = ImGui.GetWindowSize();
         DrawTopButtons(windowSize);
 
-        ImGui.TextColored(new Vector4(1f, 0.88f, 0.55f, 1f), "EST Clock");
+        ImGui.TextColored(new Vector4(1f, 0.88f, 0.55f, 1f), "Clock");
         ImGui.SameLine();
         ImGui.TextDisabled("Advanced Settings");
         ImGui.Separator();
@@ -101,7 +101,7 @@ public class ConfigWindow : Window, IDisposable
 
         DrawProfileHeader();
 
-        if (ImGui.BeginTabBar("ESTClockTabs"))
+        if (ImGui.BeginTabBar("ClockTabs"))
         {
             if (ImGui.BeginTabItem("General"))
             {
@@ -1190,16 +1190,16 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
         ImGui.Spacing();
 
-        DrawCommandLine("/est", "Toggle the clock window");
-        DrawCommandLine("/est settings", "Open settings");
-        DrawCommandLine("/estalarms", "Open settings directly on the Alarms tab");
-        DrawCommandLine("/est timezone est|pst|utc|bst|jst|mst|acst", "Change the main clock timezone");
-        DrawCommandLine("/est format 12|24", "Switch between 12h and 24h");
-        DrawCommandLine("/est colon default|always|hidden|slow|fast", "Change colon animation");
-        DrawCommandLine("/est layout horizontal|vertical", "Change active profile layout");
-        DrawCommandLine("/est preset classic|minimal|gold|retro", "Select a preset preview");
-        DrawCommandLine("/est lock | /est unlock", "Lock or unlock clock movement");
-        DrawCommandLine("/est profile next|list|set <n>|add <name>|rename <name>|delete", "Manage profiles");
+        DrawCommandLine("/clock", "Toggle the clock window");
+        DrawCommandLine("/clock settings", "Open settings");
+        DrawCommandLine("/clockalarms", "Open settings directly on the Alarms tab");
+        DrawCommandLine("/clock timezone est|pst|utc|bst|jst|mst|acst", "Change the main clock timezone");
+        DrawCommandLine("/clock format 12|24", "Switch between 12h and 24h");
+        DrawCommandLine("/clock colon default|always|hidden|slow|fast", "Change colon animation");
+        DrawCommandLine("/clock layout horizontal|vertical", "Change active profile layout");
+        DrawCommandLine("/clock preset classic|minimal|gold|retro", "Select a preset preview");
+        DrawCommandLine("/clock lock | /clock unlock", "Lock or unlock clock movement");
+        DrawCommandLine("/clock profile next|list|set <n>|add <name>|rename <name>|delete", "Manage profiles");
 
         ImGui.PopTextWrapPos();
     }

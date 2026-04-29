@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 
-namespace ESTClock;
+namespace Clock;
 
 public enum ClockTimeZone
 {

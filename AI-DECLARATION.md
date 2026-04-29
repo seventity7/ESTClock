@@ -5,7 +5,7 @@ level: copilot
 
 ## Notes
 
-- AI assistance was used at a `copilot`level for the plugin code but the plugin icon image was 100% generated using A.I. A new one 100% made by me will be submited when I get time to do one.
+- AI assistance was used at a `copilot`level for the plugin code, the icon image is no longer AI Generated since April 29/2026.
 
 ### AI Usage Disclosure
 
@@ -49,7 +49,7 @@ This plugin is submitted with the understanding that code produced with AI assis
 **Code disclosure:** This project includes AI-assisted code as declared above.
 
 **Assets disclosure:**  
-**Icon:** AI was used to generate the entire image and then Edited by me(Bryer) to correspond the exact colors, shape and size wanted.
+**Icon:** The icon image is no longer AI Generated since April 29/2026 and was fully replaced with a new one made by me.
 
 If any AI-generated assets are later added, they will be disclosed in the plugin description in accordance with repository policy. If AI-generated audio is ever used, it should be toggleable or replaceable by user selection where reasonably possible.
 

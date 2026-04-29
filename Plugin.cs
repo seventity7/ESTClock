@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Dalamud.Game.Chat;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui.Toast;
@@ -11,15 +12,15 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Interface.Windowing;
-using ESTClock.Windows;
+using Clock.Windows;
 
-namespace ESTClock;
+namespace Clock;
 
 public sealed class Plugin : IDalamudPlugin
 {
-    private const string CommandName = "/est";
-    private const string SettingsCommand = "/estsettings";
-    private const string AlarmsCommand = "/estalarms";
+    private const string CommandName = "/clock";
+    private const string SettingsCommand = "/clocksettings";
+    private const string AlarmsCommand = "/clockalarms";
 
     private readonly IDalamudPluginInterface pluginInterface;
     private readonly ICommandManager commandManager;
@@ -38,7 +39,7 @@ public sealed class Plugin : IDalamudPlugin
 
     public Configuration Configuration { get; private set; }
 
-    public readonly WindowSystem WindowSystem = new("EST Clock");
+    public readonly WindowSystem WindowSystem = new("Clock");
 
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
@@ -74,20 +75,20 @@ public sealed class Plugin : IDalamudPlugin
         commandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
             HelpMessage =
-                "EST Clock commands: /est, /est help, /est timezone est|pst|utc|bst|jst|mst|acst, /est format 12|24, " +
-                "/est colon default|always|hidden|slow|fast, /est layout horizontal|vertical, " +
-                "/est preset classic|minimal|gold|retro, /est lock, /est unlock, " +
-                "/est profile next|list|set <n>|add <name>|rename <name>|delete"
+                "Clock commands: /clock, /clock help, /clock timezone est|pst|utc|bst|jst|mst|acst, /clock format 12|24, " +
+                "/clock colon default|always|hidden|slow|fast, /clock layout horizontal|vertical, " +
+                "/clock preset classic|minimal|gold|retro, /clock lock, /clock unlock, " +
+                "/clock profile next|list|set <n>|add <name>|rename <name>|delete"
         });
 
         commandManager.AddHandler(SettingsCommand, new CommandInfo(OnSettingsCommand)
         {
-            HelpMessage = "Open EST Clock settings/customizations"
+            HelpMessage = "Open Clock settings/customizations"
         });
 
         commandManager.AddHandler(AlarmsCommand, new CommandInfo(OnAlarmsCommand)
         {
-            HelpMessage = "Open EST Clock settings directly on the Alarms tab"
+            HelpMessage = "Open Clock settings directly on the Alarms tab"
         });
 
         pluginInterface.UiBuilder.DisableCutsceneUiHide = !Configuration.HideDuringCutscenes;
@@ -234,22 +235,19 @@ public sealed class Plugin : IDalamudPlugin
             : $"{lead.TotalMinutes:0} minutes";
 
         var message = $"Scheduled maintenance starts in {leadText}.";
-        chatGui.Print(message, "EST Clock");
+        chatGui.Print(message, "Clock");
         toastGui.ShowQuest(message, new QuestToastOptions
         {
             PlaySound = false
         });
     }
 
-    private void OnChatMessage(
-        XivChatType type,
-        int timestamp,
-        ref SeString sender,
-        ref SeString message,
-        ref bool isHandled)
+    private void OnChatMessage(IHandleableChatMessage chatMessage)
     {
         try
         {
+            var type = chatMessage.LogKind;
+            var message = chatMessage.Message;
             var text = message.TextValue;
             if (string.IsNullOrWhiteSpace(text))
                 return;
@@ -414,7 +412,7 @@ public sealed class Plugin : IDalamudPlugin
 
             case "toggle":
                 ToggleMainUi();
-                chatGui.Print($"Clock {(wantedMainWindowOpen ? "opened" : "hidden")}.", "EST Clock");
+                chatGui.Print($"Clock {(wantedMainWindowOpen ? "opened" : "hidden")}.", "Clock");
                 return;
 
             case "settings":
@@ -475,14 +473,14 @@ public sealed class Plugin : IDalamudPlugin
     {
         if (!TryParseTimeZone(rest, out var zone))
         {
-            chatGui.PrintError("Invalid timezone. Use est, pst, utc, bst, jst, mst or acst.", "EST Clock");
+            chatGui.PrintError("Invalid timezone. Use est, pst, utc, bst, jst, mst or acst.", "Clock");
             return;
         }
 
         Configuration.SelectedTimeZone = zone;
         Configuration.Save();
 
-        chatGui.Print($"Timezone set to {zone.ToShortText()}.", "EST Clock");
+        chatGui.Print($"Timezone set to {zone.ToShortText()}.", "Clock");
     }
 
     private void HandleFormatCommand(string rest)
@@ -506,7 +504,7 @@ public sealed class Plugin : IDalamudPlugin
                 return;
 
             default:
-                chatGui.PrintError("Invalid format. Use 12 or 24.", "EST Clock");
+                chatGui.PrintError("Invalid format. Use 12 or 24.", "Clock");
                 return;
         }
     }
@@ -560,12 +558,12 @@ public sealed class Plugin : IDalamudPlugin
 
         if (rest is not ("default" or "blink" or "always" or "hidden" or "off" or "slow" or "fast"))
         {
-            chatGui.PrintError("Invalid colon mode. Use default, always, hidden, slow or fast.", "EST Clock");
+            chatGui.PrintError("Invalid colon mode. Use default, always, hidden, slow or fast.", "Clock");
             return;
         }
 
         Configuration.Save();
-        chatGui.Print($"Colon animation set to {Configuration.ColonAnimation}.", "EST Clock");
+        chatGui.Print($"Colon animation set to {Configuration.ColonAnimation}.", "Clock");
     }
 
     private void HandleLayoutCommand(string rest)
@@ -585,12 +583,12 @@ public sealed class Plugin : IDalamudPlugin
                 break;
 
             default:
-                chatGui.PrintError("Invalid layout. Use horizontal or vertical.", "EST Clock");
+                chatGui.PrintError("Invalid layout. Use horizontal or vertical.", "Clock");
                 return;
         }
 
         Configuration.Save();
-        chatGui.Print($"Layout set to {profile.LayoutMode}.", "EST Clock");
+        chatGui.Print($"Layout set to {profile.LayoutMode}.", "Clock");
     }
 
     private void HandlePresetCommand(string rest)
@@ -608,13 +606,13 @@ public sealed class Plugin : IDalamudPlugin
 
         if (rest is not ("classic" or "minimal" or "gold" or "retro"))
         {
-            chatGui.PrintError("Invalid preset. Use classic, minimal, gold or retro.", "EST Clock");
+            chatGui.PrintError("Invalid preset. Use classic, minimal, gold or retro.", "Clock");
             return;
         }
 
         Configuration.PreviewPresetSelection = preset;
         Configuration.Save();
-        chatGui.Print($"Preset selected: {preset}.", "EST Clock");
+        chatGui.Print($"Preset selected: {preset}.", "Clock");
     }
 
     private void HandleProfileCommand(string rest)
@@ -628,12 +626,12 @@ public sealed class Plugin : IDalamudPlugin
             case "next":
                 Configuration.ActiveProfileIndex = (Configuration.ActiveProfileIndex + 1) % Configuration.Profiles.Count;
                 Configuration.Save();
-                chatGui.Print($"Active profile: {Configuration.GetActiveProfile().Name}", "EST Clock");
+                chatGui.Print($"Active profile: {Configuration.GetActiveProfile().Name}", "Clock");
                 return;
 
             case "list":
                 var list = string.Join(", ", Configuration.Profiles.Select((p, i) => $"{i + 1}:{p.Name}"));
-                chatGui.Print($"Profiles: {list}", "EST Clock");
+                chatGui.Print($"Profiles: {list}", "Clock");
                 return;
 
             case "set":
@@ -641,11 +639,11 @@ public sealed class Plugin : IDalamudPlugin
                 {
                     Configuration.ActiveProfileIndex = idx - 1;
                     Configuration.Save();
-                    chatGui.Print($"Active profile: {Configuration.GetActiveProfile().Name}", "EST Clock");
+                    chatGui.Print($"Active profile: {Configuration.GetActiveProfile().Name}", "Clock");
                 }
                 else
                 {
-                    chatGui.PrintError("Invalid profile index.", "EST Clock");
+                    chatGui.PrintError("Invalid profile index.", "Clock");
                 }
 
                 return;
@@ -658,37 +656,37 @@ public sealed class Plugin : IDalamudPlugin
 
                 Configuration.AddProfile(name);
                 Configuration.Save();
-                chatGui.Print($"Profile \"{Configuration.GetActiveProfile().Name}\" created.", "EST Clock");
+                chatGui.Print($"Profile \"{Configuration.GetActiveProfile().Name}\" created.", "Clock");
                 return;
             }
 
             case "rename":
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    chatGui.PrintError("Provide a new profile name.", "EST Clock");
+                    chatGui.PrintError("Provide a new profile name.", "Clock");
                     return;
                 }
 
                 Configuration.GetActiveProfile().Name = value.Trim();
                 Configuration.Save();
-                chatGui.Print($"Profile renamed to \"{Configuration.GetActiveProfile().Name}\".", "EST Clock");
+                chatGui.Print($"Profile renamed to \"{Configuration.GetActiveProfile().Name}\".", "Clock");
                 return;
 
             case "delete":
                 if (Configuration.Profiles.Count <= 1)
                 {
-                    chatGui.PrintError("At least one profile must remain.", "EST Clock");
+                    chatGui.PrintError("At least one profile must remain.", "Clock");
                     return;
                 }
 
                 var removed = Configuration.GetActiveProfile().Name;
                 Configuration.DeleteActiveProfile();
                 Configuration.Save();
-                chatGui.Print($"Profile \"{removed}\" deleted.", "EST Clock");
+                chatGui.Print($"Profile \"{removed}\" deleted.", "Clock");
                 return;
 
             default:
-                chatGui.PrintError("Use: /est profile next|list|set <n>|add <name>|rename <name>|delete", "EST Clock");
+                chatGui.PrintError("Use: /clock profile next|list|set <n>|add <name>|rename <name>|delete", "Clock");
                 return;
         }
     }
@@ -748,22 +746,22 @@ public sealed class Plugin : IDalamudPlugin
 
     private void PrintHelp()
     {
-        chatGui.Print("/est - toggle clock", "EST Clock");
-        chatGui.Print("/est settings - open settings", "EST Clock");
-        chatGui.Print("/estalarms - open settings on the alarms tab", "EST Clock");
-        chatGui.Print("/est timezone est|pst|utc|bst|jst|mst|acst", "EST Clock");
-        chatGui.Print("/est format 12|24", "EST Clock");
-        chatGui.Print("/est colon default|always|hidden|slow|fast", "EST Clock");
-        chatGui.Print("/est layout horizontal|vertical", "EST Clock");
-        chatGui.Print("/est preset classic|minimal|gold|retro", "EST Clock");
-        chatGui.Print("/est lock | /est unlock", "EST Clock");
-        chatGui.Print("/est profile next|list|set <n>|add <name>|rename <name>|delete", "EST Clock");
+        chatGui.Print("/clock - toggle clock", "Clock");
+        chatGui.Print("/clock settings - open settings", "Clock");
+        chatGui.Print("/clockalarms - open settings on the alarms tab", "Clock");
+        chatGui.Print("/clock timezone est|pst|utc|bst|jst|mst|acst", "Clock");
+        chatGui.Print("/clock format 12|24", "Clock");
+        chatGui.Print("/clock colon default|always|hidden|slow|fast", "Clock");
+        chatGui.Print("/clock layout horizontal|vertical", "Clock");
+        chatGui.Print("/clock preset classic|minimal|gold|retro", "Clock");
+        chatGui.Print("/clock lock | /clock unlock", "Clock");
+        chatGui.Print("/clock profile next|list|set <n>|add <name>|rename <name>|delete", "Clock");
     }
 
     private void SaveAndNotify(string message)
     {
         Configuration.Save();
-        chatGui.Print(message, "EST Clock");
+        chatGui.Print(message, "Clock");
     }
 
     public void SendAlarmOutput(string message)

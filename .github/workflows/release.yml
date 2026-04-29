@@ -33,18 +33,18 @@ jobs:
         run: dotnet restore --no-cache
 
       - name: Build
-        run: dotnet build -c Release --no-restore -p:DalamudLibPath="D:\a\ESTClock\ESTClock\references\"
+        run: dotnet build -c Release --no-restore -p:DalamudLibPath="D:\a\Clock\Clock\references\"
 
       - name: Publish
         run: dotnet publish -c Release -o publish --no-build
 
       - name: Zip
-        run: Compress-Archive -Path publish\* -DestinationPath ESTClock.zip
+        run: Compress-Archive -Path publish\* -DestinationPath Clock.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ESTClock.zip
+          files: Clock.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
