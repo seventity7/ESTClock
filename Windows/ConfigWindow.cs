@@ -47,12 +47,12 @@ public class ConfigWindow : Window, IDisposable
             ImGuiWindowFlags.NoTitleBar;
 
         Size = new Vector2(490, 580);
-        SizeCondition = ImGuiCond.Always;
+        SizeCondition = ImGuiCond.FirstUseEver;
 
         SizeConstraints = new WindowSizeConstraints
         {
             MinimumSize = new Vector2(490, 580),
-            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+            MaximumSize = new Vector2(590, 680)
         };
 
         textSizeInputValue = configuration.GetActiveProfile().ClockTextScale;
@@ -407,8 +407,10 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.SetTooltip("You can change it on \"General\"");
             }
 
+            DrawAlarmSoundRow();
+
             var message = configuration.AlarmEditorMessage;
-            ImGui.SetNextItemWidth(142f);
+            ImGui.SetNextItemWidth(240f);
             if (ImGui.InputText("Alarm Message", ref message, 128))
             {
                 configuration.AlarmEditorMessage = message;
@@ -923,6 +925,45 @@ public class ConfigWindow : Window, IDisposable
         ImGui.TextUnformatted(label);
     }
 
+
+    private void DrawAlarmSoundRow()
+    {
+        var selectedSound = Math.Clamp(configuration.AlarmSoundId, Plugin.MinAlarmSoundEffectId, Plugin.MaxAlarmSoundEffectId);
+
+        ImGui.SetNextItemWidth(84f);
+        if (ImGui.BeginCombo("##ClockAlarmSoundId", selectedSound.ToString(CultureInfo.InvariantCulture)))
+        {
+            for (var soundId = Plugin.MinAlarmSoundEffectId; soundId <= Plugin.MaxAlarmSoundEffectId; soundId++)
+            {
+                var soundText = soundId.ToString(CultureInfo.InvariantCulture);
+                var isSelected = selectedSound == soundId;
+
+                if (ImGui.Selectable(soundText, isSelected))
+                {
+                    configuration.AlarmSoundId = soundId;
+                    configuration.Save();
+                    selectedSound = soundId;
+                }
+
+                if (isSelected)
+                    ImGui.SetItemDefaultFocus();
+            }
+
+            ImGui.EndCombo();
+        }
+
+        ImGui.SameLine();
+
+        if (ImGui.Button("Test##ClockAlarmSoundTest"))
+            plugin.PlaySelectedAlarmSoundOnly();
+
+        ImGui.SameLine();
+        ImGui.BeginDisabled();
+        ImGui.AlignTextToFramePadding();
+        ImGui.TextUnformatted("Sound");
+        ImGui.EndDisabled();
+    }
+
     private void DrawAlarmSelectors()
     {
         var editorZone = GetAlarmEditorTimeZone();
@@ -1193,6 +1234,7 @@ public class ConfigWindow : Window, IDisposable
         DrawCommandLine("/clock", "Toggle the clock window");
         DrawCommandLine("/clock settings", "Open settings");
         DrawCommandLine("/clockalarms", "Open settings directly on the Alarms tab");
+        DrawCommandLine("/alarms", "Open settings directly on the Alarms tab");
         DrawCommandLine("/clock timezone est|pst|utc|bst|jst|mst|acst", "Change the main clock timezone");
         DrawCommandLine("/clock format 12|24", "Switch between 12h and 24h");
         DrawCommandLine("/clock colon default|always|hidden|slow|fast", "Change colon animation");

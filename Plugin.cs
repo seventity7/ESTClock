@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,6 +12,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Interface.Windowing;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using Clock.Windows;
 
 namespace Clock;
@@ -21,6 +22,10 @@ public sealed class Plugin : IDalamudPlugin
     private const string CommandName = "/clock";
     private const string SettingsCommand = "/clocksettings";
     private const string AlarmsCommand = "/clockalarms";
+    private const string DirectAlarmsCommand = "/alarms";
+
+    public const int MinAlarmSoundEffectId = 1;
+    public const int MaxAlarmSoundEffectId = 16;
 
     private readonly IDalamudPluginInterface pluginInterface;
     private readonly ICommandManager commandManager;
@@ -75,7 +80,7 @@ public sealed class Plugin : IDalamudPlugin
         commandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
             HelpMessage =
-                "Clock commands: /clock, /clock help, /clock timezone est|pst|utc|bst|jst|mst|acst, /clock format 12|24, " +
+                "Clock commands: /clock, /clock help, /alarms, /clock timezone est|pst|utc|bst|jst|mst|acst, /clock format 12|24, " +
                 "/clock colon default|always|hidden|slow|fast, /clock layout horizontal|vertical, " +
                 "/clock preset classic|minimal|gold|retro, /clock lock, /clock unlock, " +
                 "/clock profile next|list|set <n>|add <name>|rename <name>|delete"
@@ -87,6 +92,11 @@ public sealed class Plugin : IDalamudPlugin
         });
 
         commandManager.AddHandler(AlarmsCommand, new CommandInfo(OnAlarmsCommand)
+        {
+            HelpMessage = "Open Clock settings directly on the Alarms tab"
+        });
+
+        commandManager.AddHandler(DirectAlarmsCommand, new CommandInfo(OnAlarmsCommand)
         {
             HelpMessage = "Open Clock settings directly on the Alarms tab"
         });
@@ -117,6 +127,7 @@ public sealed class Plugin : IDalamudPlugin
         commandManager.RemoveHandler(CommandName);
         commandManager.RemoveHandler(SettingsCommand);
         commandManager.RemoveHandler(AlarmsCommand);
+        commandManager.RemoveHandler(DirectAlarmsCommand);
     }
 
     private void DrawUI()
@@ -748,7 +759,7 @@ public sealed class Plugin : IDalamudPlugin
     {
         chatGui.Print("/clock - toggle clock", "Clock");
         chatGui.Print("/clock settings - open settings", "Clock");
-        chatGui.Print("/clockalarms - open settings on the alarms tab", "Clock");
+        chatGui.Print("/clockalarms or /alarms - open settings on the alarms tab", "Clock");
         chatGui.Print("/clock timezone est|pst|utc|bst|jst|mst|acst", "Clock");
         chatGui.Print("/clock format 12|24", "Clock");
         chatGui.Print("/clock colon default|always|hidden|slow|fast", "Clock");
@@ -771,11 +782,29 @@ public sealed class Plugin : IDalamudPlugin
         {
             PlaySound = false
         });
+        PlayAlarmSoundEffect(Configuration.AlarmSoundId);
     }
 
     public void TestAlarmOutput(string message)
     {
         SendAlarmOutput(message);
+    }
+
+    public void PlaySelectedAlarmSoundOnly()
+    {
+        PlayAlarmSoundEffect(Configuration.AlarmSoundId);
+    }
+
+    private unsafe void PlayAlarmSoundEffect(int soundId)
+    {
+        try
+        {
+            UIGlobals.PlayChatSoundEffect((uint)Math.Clamp(soundId, MinAlarmSoundEffectId, MaxAlarmSoundEffectId));
+        }
+        catch (Exception ex)
+        {
+            log.Warning(ex, "Failed to play Clock alarm sound effect.");
+        }
     }
 
     private SeString BuildColoredAlarmMessage(string message)

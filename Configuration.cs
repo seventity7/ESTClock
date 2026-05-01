@@ -213,7 +213,7 @@ public sealed class AlarmEntry
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    public int Version { get; set; } = 14;
+    public int Version { get; set; } = 15;
 
     [NonSerialized]
     private IDalamudPluginInterface? pluginInterface;
@@ -235,6 +235,7 @@ public class Configuration : IPluginConfiguration
     public bool AlarmEditorIsPm = false;
     public string AlarmEditorMessage = "";
     public string AlarmEditorLastLocalDateText = "";
+    public int AlarmSoundId = 8;
 
     public List<AlarmEntry> Alarms = new();
 
@@ -318,6 +319,8 @@ public class Configuration : IPluginConfiguration
         if (Alarms == null)
             Alarms = new List<AlarmEntry>();
 
+        AlarmSoundId = Math.Clamp(AlarmSoundId, 1, 16);
+
         ActiveProfileIndex = Math.Clamp(ActiveProfileIndex, 0, Profiles.Count - 1);
 
         foreach (var profile in Profiles)
@@ -332,7 +335,7 @@ public class Configuration : IPluginConfiguration
                 EnsureLocalTimeDefaults(profile);
         }
 
-        Version = 14;
+        Version = 15;
 
         if (!string.IsNullOrWhiteSpace(CustomAlarmDateTimeText))
         {
